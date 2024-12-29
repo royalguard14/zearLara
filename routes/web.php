@@ -26,10 +26,30 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+
+
+
+Route::middleware(['auth', 'checkRole:Developer'])->get('/clear-cache', function () {
+    Artisan::call('cache:clear');
+    Artisan::call('route:clear');
+    Artisan::call('config:clear');
+    Artisan::call('view:clear');
+
+            return redirect()
+            ->route('developer.dashboard')
+            ->with([
+                'success' => 'Clear successfully!',
+                'icon' => 'success'
+            ]);
+});
+
+
+
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-
+//Nasa BladeServiceProvider setup nito
 Route::get('/dashboard/developer', [DashboardController::class, 'developer'])->name('developer.dashboard');
 Route::get('/dashboard/user', [DashboardController::class, 'user'])->name('user.dashboard');
 
